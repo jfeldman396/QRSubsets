@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Joseph", "Feldman", , "joseph.feldman@duke.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This package implements Bayesian subset selecion for quantile regression using posterior decision analysis. Given any bayesian regression model, the functions summarise the implied quantile functions with linear actions, and curate a collection of near-optimal, quantile-specific subsets for prediction and inference.
+Description: This package implements Bayesian subsets selecion for quantile regression using posterior decision analysis. Given any bayesian regression model, the functions summarise the implied quantile functions with linear actions, and curate a collection of near-optimal, quantile-specific subsets for prediction and inference.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
