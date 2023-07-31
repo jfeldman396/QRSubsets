@@ -4,7 +4,7 @@
 #' @param post_Q_tau posterior samples of the conditional quantiles at \code{XX}
 #' @param XX covariate values
 #' @param indicators inclusion indicators from BBA algorithn
-#' @param eps_level slack variable
+#' @param epsmm_level slack variable
 #' @param eta_level slack variable
 #' @return \eqn{\tau}-specific acceptable families
 #' @export
