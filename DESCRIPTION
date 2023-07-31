@@ -1,12 +1,15 @@
 Package: QRSubsets
-Title: What the Package Does (One Line, Title Case)
+Title: Bayesian Subset Selection and Uncertainty Quantification for Quantile Regression
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Joseph", "Feldman", , "joseph.feldman@duke.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: This package implements Bayesian subset selecion for quantile regression using posterior decision analysis. Given any bayesian regression model, the functions summarise the implied quantile functions with linear actions, and curate a collection of near-optimal, quantile-specific subsets for prediction and inference.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports: 
+    leaps
+URL: https://github.com/jfeldman396/QRSubsets
+BugReports: https://github.com/jfeldman396/QRSubsets/issues
