@@ -18,7 +18,7 @@
 #' @importFrom leaps regsubsets
 #' @export
 
-branch_and_bound = function(yy,
+branch_and_bound = function(Q_hat_tau,
                             XX,
                             wts = NULL,
                             n_best = 15,
@@ -34,7 +34,7 @@ branch_and_bound = function(yy,
   colnames(XX) = 1:p
 
   # Some basic checks:
-  if(length(yy) !=n)
+  if(length(Q_hat_tau) !=n)
     stop('length of yy must equal the number of rows of XX')
 
   if(!is.null(to_include) && !is.null(to_exclude)){
@@ -61,7 +61,7 @@ branch_and_bound = function(yy,
     XX = XX[,-to_exclude]
 
   # Branch-and-bound search:
-  fit_all = leaps::regsubsets(x = XX, y = yy,
+  fit_all = leaps::regsubsets(x = XX, y = Q_hat_tau,
                        weights = wts,
                        nbest = n_best, nvmax = p,
                        method = searchtype,

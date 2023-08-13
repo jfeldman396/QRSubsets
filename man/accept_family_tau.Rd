@@ -7,19 +7,27 @@
 accept_family_tau(post_Q_tau, XX, indicators, eps_level = 0.05, eta_level = 0)
 }
 \arguments{
-\item{post_Q_tau}{posterior samples of the conditional quantiles at \code{XX}}
+\item{post_Q_tau}{\code{S x n} matrix of S posterior samples of the conditional quantile function
+\eqn{Q_{\tau}(x_i)} for each covariate value in \code{XX}}
 
-\item{XX}{covariate values}
+\item{XX}{\code{n x p} matrix of covariates at which to evaluate subsets}
 
-\item{indicators}{inclusion indicators from BBA algorithn}
+\item{indicators}{\code{L x p} matrix of inclusion indicators extracted from the branch and bound}
 
-\item{eps_level}{slack variable}
+\item{eps_level}{slack variable, used to determine member subsets in the acceptable family}
 
-\item{eta_level}{slack variable}
+\item{eta_level}{slack variable, used to determine member subsets in the acceptable family}
 }
 \value{
 \eqn{\tau}-specific acceptable families
 }
 \description{
-Curate Quantile Specific Acceptable Families
+Using posterior samples of the \eqn{\tau}th conditional quantile function, evaluate the posterior probability that each candidate
+subset obtained from the branch and bound search algorithm has comparable predictive power to the anchoring action. The anchor is
+chosen as the ``best" fit to the model-based conditional quantile function, which we set as the model-based posterior mean.
+}
+\details{
+For any subset \code{S} obtained by the quantile-specific branch and bound search,
+that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \times (L^{\tau}_{S}(\boldsymbol\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\boldsymbol\theta) }
+with \eqn{\hat Q} the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \code{\theta} are Bayesian model \code{\mathcal{M}} parameters, drawn from the posterior.
 }

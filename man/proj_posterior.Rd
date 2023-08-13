@@ -2,29 +2,25 @@
 % Please edit documentation in R/proj_posterior.R
 \name{proj_posterior}
 \alias{proj_posterior}
-\title{Projected predictive distribution for regression coefficients}
+\title{Projected posterior distribution for regression coefficients, i.e. the posterior action}
 \usage{
-proj_posterior(post_Q_tau, XX, sub_x = 1:ncol(XX), use_ols = TRUE)
+proj_posterior(post_Q_tau, XX, sub_x = 1:ncol(XX))
 }
 \arguments{
+\item{post_Q_tau}{\code{S x n} matrix of posterior samples of the conditional quantile function at each design point among \code{XX} covariate values}
+
 \item{XX}{\code{n x p} matrix of covariates}
 
 \item{sub_x}{vector of inclusion indicators for the \code{p} covariates;
 the remaining coefficients will be fixed at zero}
-
-\item{use_ols}{logical; if TRUE, use ordinary least squares regression (default);
-otherwise use logistic regression}
-
-\item{post_y_pred}{\code{S x n} matrix of posterior predictive
-at the given \code{XX} covariate values}
 }
 \value{
 \code{post_beta}: the \code{S x p} matrix of
-draws from the projected predictive distribution of  the regression coefficients.
+draws from the projected posterior distribution of the regression coefficients.
 }
 \description{
-Given draws from the predictive distribution, project these
-draws onto (a  subset of) the covariates. This produces
-many predictive draws for the regression coefficients,
+Given draws from the posterior distribution of the conditional quantile function, project these
+draws onto (a subset of) the covariates. This produces
+many posterior draws for the regression coefficients,
 which provides uncertainty quantification.
 }

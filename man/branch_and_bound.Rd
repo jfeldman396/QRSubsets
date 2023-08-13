@@ -5,7 +5,7 @@
 \title{Branch-and-bound algorithm for linear subset search}
 \usage{
 branch_and_bound(
-  yy,
+  Q_hat_tau,
   XX,
   wts = NULL,
   n_best = 15,
@@ -15,6 +15,8 @@ branch_and_bound(
 )
 }
 \arguments{
+\item{Q_hat_tau}{posterior mean of the \eqn{\tau}-conditional quantile function at \code{XX}}
+
 \item{XX}{matrix of covariates}
 
 \item{wts}{vector of observation weights (for weighted least squares)}
@@ -26,8 +28,6 @@ branch_and_bound(
 \item{to_exclude}{indices of covariates to exclude from \emph{all} subsets}
 
 \item{searchtype}{use exhaustive search, forward selection, backward selection or sequential replacement to search}
-
-\item{Q_hat_tau}{posterior mean of the \eqn{\tau}-conditional quantile function at \code{XX}}
 }
 \value{
 \code{inclusion_index}: the matrix of inclusion indicators (columns) for
