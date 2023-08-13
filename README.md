@@ -252,9 +252,6 @@ library(tidyr)
 library(dplyr)
 #> 
 #> Attaching package: 'dplyr'
-#> The following object is masked from 'package:MASS':
-#> 
-#>     select
 #> The following objects are masked from 'package:stats':
 #> 
 #>     filter, lag
@@ -269,7 +266,7 @@ pivot_keystone_tau<- data.frame(keystone_tau[,-1]) %>% pivot_longer(cols = !tau,
 library(ggplot2)
 ####marginal variable importance
 
-ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x)), y = value, fill = as.factor(tau)))+ 
+p<-ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x)), y = value, fill = as.factor(tau)))+ 
   geom_bar(stat = "identity", position = "dodge", width = .7)+
   xlab("Coefficient")+
   ylab("Marginal var. imp.")+
@@ -283,6 +280,7 @@ ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x
   ggtitle("Marginal Variable Importance Across Quantiles")+
   guides(fill = guide_legend(title = "Quantile"))+
   coord_flip()
+print(p)
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> We

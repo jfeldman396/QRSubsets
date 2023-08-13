@@ -195,7 +195,7 @@ pivot_keystone_tau<- data.frame(keystone_tau[,-1]) %>% pivot_longer(cols = !tau,
 library(ggplot2)
 ####marginal variable importance
 
-ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x)), y = value, fill = as.factor(tau)))+ 
+p<-ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x)), y = value, fill = as.factor(tau)))+ 
   geom_bar(stat = "identity", position = "dodge", width = .7)+
   xlab("Coefficient")+
   ylab("Marginal var. imp.")+
@@ -209,6 +209,7 @@ ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x
   ggtitle("Marginal Variable Importance Across Quantiles")+
   guides(fill = guide_legend(title = "Quantile"))+
   coord_flip()
+print(p)
 
 ```
 We see that across quantiles, the heterogeneous covariate $X_{6}$ is the most important.  In particular for both the 1st and 99th quantile, it is included in more than 95$\%$ of acceptable families. We also see that the acceptable families correctly deem $X_{2}$ and $X_{10}$ as important, which are the non-zero homogeneous covariates.
