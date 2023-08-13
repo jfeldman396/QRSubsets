@@ -1,0 +1,350 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# QRSubsets
+
+QRsubsets implements the proposed methodology in the paper
+$\textit{Bayesian Quantile Regression with Subset Selection: A Posterior Summarization Perspective}$.
+Specifically, it provides for the linear quantile regression
+$$Q_{\tau}(Y \mid \boldsymbol{x}) = \boldsymbol x^{\intercal}\boldsymbol{\beta}(\tau), \quad \tau \in (0,1)$$
+
+where $Q_{\tau}(Y \mid \boldsymbol x)$, is the conditional quantile
+function for numeric random variable $Y$, $\boldsymbol x$ is a
+$p$-dimensional vector of covariates, and $\boldsymbol{\beta}(\tau)$ is
+a vector of quantile regression coefficients, potentially varying in
+$\tau$, which is the quantile of interest.
+
+The procedure rests on summarizing model-based conditional quantile
+functions $Q_{\tau}(Y \mid \boldsymbol x, \boldsymbol \theta)$ under
+$\textit{any}$ Bayesian regression model $M$ with posterior
+$p(\boldsymbol{\theta} \mid \boldsymbol{y})$. Here, we emphasize that
+$Q_{\tau}(Y \mid \boldsymbol x, \boldsymbol \theta)$ is a function of
+model $M$ parameters.
+
+Using these posterior $\textit{functionals}$, $\verb|QRsubsets|$
+provides:
+
+- Quantile-specific optimal $\textbf{linear actions}$ (with uncertainty
+  quantification) for a given subset of covariates
+- Quantile-specific $\textbf{acceptable families}$ of subsets that
+  maintain competitive predictive performance for any quantile of
+  interest
+- The Quantile-specific $\textbf{smallest acceptable subset}$, which
+  maintains a parsimonious explanation of the conditional quantile
+  function without sacrificing predictive power
+- Quantile-specific $\textbf{variable importance}$, which measures
+  covariates common to all, most, some, or few of the subsets included
+  in any acceptable family
+
+In a typical quantile regression analysis, we extract acceptable
+families for several quantiles, across the distribution of the response.
+For subset selection, the smallest acceptable subset for each quantile
+provides a convenient way to compare estimates of
+$\boldsymbol \beta_{j}(\tau)$ across quantiles, potentially detecting
+heterogeneous covariate effects.
+
+However, a key advantage of accumulating acceptable subsets is the
+broader ability to evaluate many, competing subsets. Thus, we encourage
+users to examine the variable importances for each quantile-specific
+acceptable family to draw more robust conclusions about the influence of
+each covariate across the $\textit{entire}$ distribution of the
+response.
+
+## Installation
+
+You can install the development version of QRSubsets from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("jfeldman396/QRSubsets")
+```
+
+## Example
+
+To illustrate the use of $\verb|QRSubsets|$, we simulate response
+variables from a linear location scale model, where the variance process
+is heteroscedastic and predictor-dependent. We also simulate correlated
+predictors, which further encourages the collection of competing
+explanations for the same quantile function.
+
+``` r
+
+library(MASS)
+#simulate correlated covariates, and determine which have non-zero effects on the conditional quantiles
+ n = 200
+ p = 10
+ C<- diag(1,p)
+ 
+ for(i in 1:p){
+   for(j in 1:p){
+     if(j != i){
+       C[i,j] = .7^abs(i - j)
+     }
+   }
+ }
+
+sig<- seq(2,p,by = 4) # covariates with identical, non-zero effects across response distribution
+ind_het<- 2 # covariate with heterogeneous effects across the response distribution
+
+#simulate covariates
+
+set.seed(123)
+Z<- mvrnorm(n, rep(0,p),C)
+X<- apply(Z,2,function(x) pnorm(x))
+colnames(X) = paste("X_", 1:10,sep = '')
+# simulate response from Linear location scale model                        
+y<- rnorm(n,1+X[,sig[-ind_het]]%*%rep(1,length(sig)-1), c(1 +X[,sig[ind_het]]*3))
+
+
+#visualize heteroscedasticity
+
+plot(X[,sig[ind_het]], y, xlab = expression(X[6]),ylab = 'y',
+     main = "Heterogeneous Covariate Effects Across Response Distribution")
+```
+
+<img src="man/figures/README-example-1.png" width="100%" />
+
+We see in this simulated example that $X_{6}$ has different effects on
+the response, which depends on the quantile. Therefore, we expect
+$\beta_{6}(\tau)$ to vary in $\tau$.
+
+## Fitting M
+
+Next, we fit a Bayesian regression model that captures this
+heterogeneity. We choose a heteroscedastic bart model, which is
+implemented in the $\verb|rbart|$ package.
+
+``` r
+library(rbart)
+set.seed(345)
+hbart = rbart::rbart(X,y, k = 7) # we change k to enforce smoothness
+samps_hbart = predict(hbart)
+```
+
+### Diagnosing Heterogeneity
+
+We use predictive qqplots to verify that the model is well-calibrated to
+the data, and then an $H-evidence$ plot to determine whether there is
+evidence in the model to suggest that the variance process is predictor
+dependent, which promotes a quantile regression analysis. To determine
+this, we compare the posterior of the variance process under the
+heteroscedastic model to the constant error variance implied by a
+homoscedastic linear regression. Because many intervals do not overlap
+with zero, there is evidence to suggest that the error variance is
+predictor dependent.
+
+``` r
+
+## qq plot -- points should fall on 45-degree line
+rbart::hbartqqplot(y,samps_hbart,nunif = 200)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+``` r
+
+
+##H-evidence
+
+rbart::plotFunctionDraws(samps_hbart$sdraws, complevel = summary(lm(y~X))$sigma, xlab = "Posterior mean of conditional variance", main = "H-evidence")
+legend("bottomright", c("LR error variance","Hbart error variance"), col = 2:3, lty= 1, bty = 'n')
+```
+
+<img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
+
+## Subset Search
+
+We then extract S posterior samples of the conditional quantile
+function, which will be used for quantile-specific subset search and
+selection. Here we consider
+$Q_{\tau}(Y \mid \boldsymbol x, \boldsymbol \theta)$ for
+$\tau \in \{0.01,0.5, 0.99\}$.
+
+``` r
+tau = c(0.01,0.5,0.99)
+
+post_Q_tau = vector('list',3)
+
+for(t in 1:length(tau)){
+  
+  post_Q_tau[[t]] = t(sapply(1:1000,function(s) qnorm(tau[t],
+                                                 samps_hbart$mdraws[s,],
+                                                 samps_hbart$sdraws[s,])))
+}
+```
+
+Using these samples, we curate quantile specific acceptable families.
+Here, for each enumerated quantile, we screen the $\verb|n_best|$
+subsets of each model size. We store these subsets in a Boolean matrix
+for each quantile.
+
+``` r
+library(QRSubsets)
+
+Indicators = vector('list', 3)
+for(t in 1:length(tau)){
+
+  Indicators[[t]]<-branch_and_bound(Q_hat_tau = colMeans(post_Q_tau[[t]]),
+                                    XX = cbind(rep(1,200), X),
+                                    n_best = 10)
+}
+
+# number of candidate subsets
+dim(Indicators[[1]])
+#> [1] 91 11
+
+# summarise model sizes
+
+table(rowSums(Indicators[[1]]))
+#> 
+#>  2  3  4  5  6  7  8  9 10 11 
+#> 10 10 10 10 10 10 10 10 10  1
+```
+
+The BBA algorithm provides 91 candidate subset for each quantile of
+interest.
+
+## Curating Quantile-Specific Acceptable Families
+
+Now, we filter among these subsets to provide the quantile-specific
+acceptable families. These leverage the posterior under $M$ to evaluate
+which of the candidate subsets maintain strong predictive performance
+for the quantile of interest.
+
+``` r
+accept_info_tau = vector('list', length = 3)
+
+
+for(t in 1:length(tau)){
+  
+  accept_info_tau[[t]]=accept_family_tau(post_Q_tau[[t]],
+                    cbind(rep(1,200), X),
+                    indicators = Indicators[[t]])
+}
+```
+
+## Quantile-specific variable importance
+
+Among the quantile-specific acceptable families, we can investigate
+marginal variable importance across the entire reponse distribution.
+This is done by identifyingcovariates for which the marginal importance
+is large (\> \$95%) for at least one quantile
+
+``` r
+
+keystone_tau = NULL
+coef_tau = 
+for(t in 1:length(tau)){
+
+  keystone_tau<- rbind(keystone_tau,var_imp(Indicators[[t]],
+                                             accept_info_tau[[t]]$all_accept,
+                                             co= F)
+                                            $vi_inc)
+}
+
+
+colnames(keystone_tau) = c("Intercept",colnames(X))
+keystone_tau = cbind(keystone_tau,tau)
+
+#For plotting
+library(tidyr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following object is masked from 'package:MASS':
+#> 
+#>     select
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library(ggplot2)
+pivot_keystone_tau<- data.frame(keystone_tau[,-1]) %>% pivot_longer(cols = !tau,names_to = "coefficient")  %>% 
+  mutate(keystone = factor(ifelse(value >=.95,1,0)))
+
+
+library(ggplot2)
+####marginal variable importance
+
+ggplot(pivot_keystone_tau, aes(x =reorder(coefficient, value,function(x)  mean(x)), y = value, fill = as.factor(tau)))+ 
+  geom_bar(stat = "identity", position = "dodge", width = .7)+
+  xlab("Coefficient")+
+  ylab("Marginal var. imp.")+
+  theme(axis.text.y =  element_text(face = "bold", size= 11),
+        axis.text.x =  element_text(face = "bold", size= 11),
+        axis.title.y = element_text(face = "bold", size= 12),
+        axis.title.x = element_text(face = "bold", size= 12),
+        title = element_text(face = "bold", size= 12.5) )+
+  scale_fill_brewer()+
+  geom_hline(yintercept = 0.95, linetype = "dotted",linewidth= 2)+
+  ggtitle("Marginal Variable Importance Across Quantiles")+
+  guides(fill = guide_legend(title = "Quantile"))+
+  coord_flip()
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> We
+see that across quantiles, the heterogeneous covariate $X_{6}$ is the
+most important. In particular for both the 1st and 99th quantile, it is
+included in more than 95$\%$ of acceptable families. We also see that
+the acceptable families correctly deem $X_{2}$ and $X_{10}$ as
+important, which are the non-zero homogeneous covariates.
+
+## Post estimates and uncertainty
+
+We can also look specifically at the smallest acceptable subset in each
+acceptable family to extract point estiamtes via the optimal action and
+uncertainty quantification via the posterior action
+
+``` r
+
+library(coda)
+smallest_tau = NULL
+small_proj_tau = vector('list',3)
+
+for(t in 1:length(tau)){
+  smallest_tau = cbind(smallest_tau, accept_info_tau[[t]]$beta_hat_small
+  )
+  small_proj_tau[[t]] = HPDinterval(as.mcmc(proj_posterior(post_Q_tau[[t]], 
+                                       cbind(rep(1,200),X),
+                                       sub_x = Indicators[[t]][accept_info_tau[[t]]$ell_small,])))
+}
+library(rlist)
+coefs_uncert_small = data.frame(point = matrix(smallest_tau, nrow = 11*3, byrow = F),
+                            list.rbind(small_proj_tau),
+                      coef = rep(c("Intercept",unique(pivot_keystone_tau$coefficient)),3),
+                            tau = rep(tau*100, each= 11))
+
+ggplot(coefs_uncert_small  , aes(x = factor(tau), y = point, color = factor(tau)))+ 
+  geom_point(position = position_dodge(.9),size = 5)+ 
+  geom_errorbar(aes(ymin = lower, ymax = upper), linewidth =3, position = position_dodge(.9))+
+  facet_wrap(~coef,scales = "free_y", ncol = 4)+
+  theme_bw()+
+  geom_hline(yintercept = 0, linetype = "dotted",linewidth = 2)+
+  theme(
+        strip.text = element_text(face = "bold", size =14),
+        axis.text.x = element_text(face = "bold", size = 14),
+        legend.text = element_text(face = "bold", size = 18),
+        legend.title = element_text(face = "bold", size =18),
+        title = element_text(face = "bold", size = 20))+
+  xlab("Quantile")+
+  ylab("Estimated Effect Sizes")+
+  scale_color_viridis_d( begin = 0, end = .95)+
+  guides(shape = FALSE,color= guide_legend(title = "Quantile", size = 10, face = "bold"))+
+  ggtitle("Quantile Effect Sizes for Keystone Covariates")
+#> Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+#> of ggplot2 3.3.4.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+We observe that the smallest acceptable subset does not include
+homogeneous covariate $X_2$ in its subset for any of the quantiles, but
+does include heterogeneous $X_{6}$ and $X_{10}$. Moreover, we observe
+that estimates and uncertainty vary across quantiles for $X_{6}$, while
+the intervals are not well-separated for $X_{10}$. For each quantile
