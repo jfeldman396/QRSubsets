@@ -14,8 +14,8 @@
 #' @return \eqn{\tau}-specific acceptable families
 #'
 #' @details For any subset \code{S} obtained by the quantile-specific branch and bound search,
-#' that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \times (L^{\tau}_{S}(\boldsymbol\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\boldsymbol\theta) }
-#' with \eqn{\hat Q} the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \code{\theta} are Bayesian model \code{\mathcal{M}} parameters, drawn from the posterior.
+#' that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 x (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) }
+#' with \eqn{\hat Q} the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
 #' @export
 #'
 accept_family_tau = function(post_Q_tau,

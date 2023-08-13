@@ -27,10 +27,10 @@ and posterior samples of conditional quantile function from the overarching Baye
 the data.
 }
 \details{
-\code{post_loss} is an \code{S\times L} matrix including posterior samples of the difference in RSS between the anchor,
+\code{post_loss} is an \code{S x L} matrix including posterior samples of the difference in RSS between the anchor,
 which is the posterior mean of the conditional quantile function under the unifying Bayesian model, and each subset from
 the branch and bound filtering. This is used to determine the acceptable family.
-\code{post_loss_raw} is an \code{S\times L} matrix with the posterior samples of the RSS for each subset in the branch and bound filtering.
+\code{post_loss_raw} is an \code{S x L} matrix with the posterior samples of the RSS for each subset in the branch and bound filtering.
 \code{ref} is an \code{S x 1} array containing posterior samples of the RSS for the anchor action. \code{post_loss_raw} and \code{ref} are
 the constituent terms to compute \code{post_loss}. Finally,
 \code{beta_hat_L} is the optimal action for each subset in the branch and bound filtering
