@@ -325,9 +325,9 @@ ggplot(coefs_uncert_small  , aes(x = factor(tau), y = point, color = factor(tau)
   theme(
         strip.text = element_text(face = "bold", size =14),
         axis.text.x = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "bold", size = 18),
-        legend.title = element_text(face = "bold", size =18),
-        title = element_text(face = "bold", size = 20))+
+        legend.text = element_text(face = "bold", size = 16),
+        legend.title = element_text(face = "bold", size =16),
+        title = element_text(face = "bold", size = 16))+
   xlab("Quantile")+
   ylab("Estimated Effect Sizes")+
   scale_color_viridis_d( begin = 0, end = .95)+
