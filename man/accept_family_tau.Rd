@@ -19,7 +19,8 @@ accept_family_tau(post_Q_tau, XX, indicators, eps_level = 0.05, eta_level = 0)
 \item{eta_level}{slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.}
 }
 \value{
-\eqn{\tau}-specific acceptable families
+A list containing \code{all_accept} which are the indices of the subsets from \code{indicators} which are acceptable,
+\code{ell_small}, which the index of the smallest acceptable subset, and \code{beta_hat_small} which is the optimal action (\eqn{\tau} quantile regression coefficients) for the smallest acceptable subset.
 }
 \description{
 Using posterior samples of the \eqn{\tau}th conditional quantile function, evaluate the posterior probability that each candidate
@@ -29,5 +30,6 @@ chosen as the ``best" fit to the model-based conditional quantile function, whic
 \details{
 For any subset \eqn{S} obtained by the quantile-specific branch and bound search,
 that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \ \code{x} \ (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) },
-\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
+\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior. The smallest acceptable subset
+is then the smallest in cardanlity subset collected that maintains satisfactory predictive power under the criteria outlined above.
 }

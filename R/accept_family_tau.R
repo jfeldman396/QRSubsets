@@ -11,11 +11,14 @@
 #' @param indicators \code{L x p} matrix of inclusion indicators extracted from the branch and bound
 #' @param eps_level slack variable \eqn{\epsilon}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
 #' @param eta_level slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
-#' @return \eqn{\tau}-specific acceptable families
+#' @return A list containing \code{all_accept} which are the indices of the subsets from \code{indicators} which are acceptable,
+#' \code{ell_small}, which the index of the smallest acceptable subset, and \code{beta_hat_small} which is the optimal action (\eqn{\tau} quantile regression coefficients) for the smallest acceptable subset.
+#'
 #'
 #' @details For any subset \eqn{S} obtained by the quantile-specific branch and bound search,
 #' that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \ \code{x} \ (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) },
-#'\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
+#'\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior. The smallest acceptable subset
+#' is then the smallest in cardanlity subset collected that maintains satisfactory predictive power under the criteria outlined above.
 #' @export
 #'
 accept_family_tau = function(post_Q_tau,
@@ -39,10 +42,6 @@ accept_family_tau = function(post_Q_tau,
   all_accept = which(colMeans(post_loss <= eta_level)
                      >= eps_level)
 
-  prob_accept = colMeans(post_loss <= eta_level)[all_accept]
-
-  #index of max D_post
-  max_prob_accept<- which.max(colMeans(post_loss <= eta_level)[all_accept])
 
 
   # Subset sizes:
@@ -62,20 +61,16 @@ accept_family_tau = function(post_Q_tau,
     ell_small = all_accept[ind_min_size_accept]
   }
 
-  ell_loss = all_accept[max_prob_accept]
   # Compute the coefficients for each index:
 
   beta_hat_small = beta_hat[ell_small,]
-  beta_hat_loss = beta_hat[ell_loss,]
 
 
   return(
     list(
       all_accept = all_accept,
       beta_hat_small = beta_hat_small,
-      beta_hat_loss = beta_hat_loss,
-      ell_small = ell_small,
-      ell_loss= ell_loss
+      ell_small = ell_small
     )
   )
 }
