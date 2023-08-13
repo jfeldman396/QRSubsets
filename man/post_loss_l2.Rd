@@ -2,7 +2,7 @@
 % Please edit documentation in R/post_loss_l2.R
 \name{post_loss_l2}
 \alias{post_loss_l2}
-\title{Compute the posterior aggregated squared-error loss}
+\title{Compute posterior samples of the difference in aggregated squared-error loss between any subset and the anchor action}
 \usage{
 post_loss_l2(post_Q_tau, XX, indicators)
 }
@@ -20,11 +20,11 @@ a list with four elements \code{post_loss}, \code{post_loss_raw},
 \code{ref}, and \code{beta_hat_L}
 }
 \description{
-Use posterior draws of the conditional quantile function to compute the residual sum
-of squares (RSS) between any subset of predictors and the model-fitted quantiles. These quantities
-are computed given filtering of subsets from the branch and bound search algorithm, and the
+Compute the posterior distribution  of the residual sum
+of squares (RSS) between any subset of predictors and the model-fitted quantiles. These samples are obtained for
+each subset from the branch and bound search algorithm, and the
 and posterior samples of conditional quantile function from the overarching Bayesian model fit to
-the data.
+the data. Using the return samples, we can estimate the probabilities that allow us to collect acceptable subsets.
 }
 \details{
 \code{post_loss} is an \code{S x L} matrix including posterior samples of the difference in RSS between the anchor,

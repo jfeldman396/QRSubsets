@@ -14,9 +14,9 @@ accept_family_tau(post_Q_tau, XX, indicators, eps_level = 0.05, eta_level = 0)
 
 \item{indicators}{\code{L x p} matrix of inclusion indicators extracted from the branch and bound}
 
-\item{eps_level}{slack variable, used to determine member subsets in the acceptable family}
+\item{eps_level}{slack variable \eqn{\epsilon}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.}
 
-\item{eta_level}{slack variable, used to determine member subsets in the acceptable family}
+\item{eta_level}{slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.}
 }
 \value{
 \eqn{\tau}-specific acceptable families
@@ -27,7 +27,7 @@ subset obtained from the branch and bound search algorithm has comparable predic
 chosen as the ``best" fit to the model-based conditional quantile function, which we set as the model-based posterior mean.
 }
 \details{
-For any subset \code{S} obtained by the quantile-specific branch and bound search,
-that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 x (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) }
-with \eqn{\hat Q} the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
+For any subset \eqn{S} obtained by the quantile-specific branch and bound search,
+that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \ \code{x} \ (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) },
+\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
 }

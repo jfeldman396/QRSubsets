@@ -1,10 +1,10 @@
-#' Compute the posterior aggregated squared-error loss
+#' Compute posterior samples of the difference in aggregated squared-error loss between any subset and the anchor action
 #'
-#' Use posterior draws of the conditional quantile function to compute the residual sum
-#' of squares (RSS) between any subset of predictors and the model-fitted quantiles. These quantities
-#' are computed given filtering of subsets from the branch and bound search algorithm, and the
+#' Compute the posterior distribution  of the residual sum
+#' of squares (RSS) between any subset of predictors and the model-fitted quantiles. These samples are obtained for
+#' each subset from the branch and bound search algorithm, and the
 #' and posterior samples of conditional quantile function from the overarching Bayesian model fit to
-#' the data.
+#' the data. Using the return samples, we can estimate the probabilities that allow us to collect acceptable subsets.
 #'
 #' @param post_Q_tau \code{S x n} matrix of S posterior samples of the conditional quantile function
 #' \eqn{Q_{\tau}(x_i)} for each covariate value in \code{XX}
@@ -14,7 +14,8 @@
 #' @return a list with four elements \code{post_loss}, \code{post_loss_raw},
 #' \code{ref}, and \code{beta_hat_L}
 #'
-#' @details \code{post_loss} is an \code{S x L} matrix including posterior samples of the difference in RSS between the anchor,
+#' @details
+#' \code{post_loss} is an \code{S x L} matrix including posterior samples of the difference in RSS between the anchor,
 #' which is the posterior mean of the conditional quantile function under the unifying Bayesian model, and each subset from
 #' the branch and bound filtering. This is used to determine the acceptable family.
 #' \code{post_loss_raw} is an \code{S x L} matrix with the posterior samples of the RSS for each subset in the branch and bound filtering.

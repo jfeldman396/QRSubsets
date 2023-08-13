@@ -10,7 +10,7 @@
 #' the remaining coefficients will be fixed at zero
 
 #' @return \code{post_beta}: the \code{S x p} matrix of
-#' draws from the projected posterior distribution of the regression coefficients.
+#' draws from the projected posterior distribution of the regression coefficients for any subset.
 #' @export
 
 proj_posterior = function(post_Q_tau, XX, sub_x = 1:ncol(XX)){

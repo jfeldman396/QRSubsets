@@ -9,13 +9,13 @@
 #' \eqn{Q_{\tau}(x_i)} for each covariate value in \code{XX}
 #' @param XX \code{n x p} matrix of covariates at which to evaluate subsets
 #' @param indicators \code{L x p} matrix of inclusion indicators extracted from the branch and bound
-#' @param eps_level slack variable, used to determine member subsets in the acceptable family
-#' @param eta_level slack variable, used to determine member subsets in the acceptable family
+#' @param eps_level slack variable \eqn{\epsilon}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
+#' @param eta_level slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
 #' @return \eqn{\tau}-specific acceptable families
 #'
-#' @details For any subset \code{S} obtained by the quantile-specific branch and bound search,
-#' that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 x (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) }
-#' with \eqn{\hat Q} the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
+#' @details For any subset \eqn{S} obtained by the quantile-specific branch and bound search,
+#' that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \ \code{x} \ (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) },
+#'\eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior.
 #' @export
 #'
 accept_family_tau = function(post_Q_tau,

@@ -16,7 +16,7 @@ the remaining coefficients will be fixed at zero}
 }
 \value{
 \code{post_beta}: the \code{S x p} matrix of
-draws from the projected posterior distribution of the regression coefficients.
+draws from the projected posterior distribution of the regression coefficients for any subset.
 }
 \description{
 Given draws from the posterior distribution of the conditional quantile function, project these
