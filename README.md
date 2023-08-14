@@ -288,9 +288,9 @@ print(p)
 
 We see that across quantiles, the heterogeneous covariate $X_{6}$ is the
 most important. In particular for both the 1st and 99th quantile, it is
-included in more than 95$\%$ of acceptable families. We also see that
-the acceptable families correctly deem $X_{2}$ and $X_{10}$ as
-important, which are the non-zero homogeneous covariates.
+included in more than 95% of acceptable families. We also see that the
+acceptable families correctly deem $X_{2}$ and $X_{10}$ as important,
+which are the non-zero homogeneous covariates.
 
 ## Post estimates and uncertainty
 
