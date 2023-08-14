@@ -3,8 +3,10 @@
 
 # QRSubsets
 
-QRsubsets implements the proposed methodology in the paper .
-Specifically, it provides for the linear quantile regression
+QRsubsets implements the proposed methodology in the paper *Bayesian
+Quantile Regression with Subset Selection: A Posterior Summarization
+Perspective*. Specifically, it provides **Bayesian subset selection**
+for the linear quantile regression
 $$Q_{\tau}(Y \mid \boldsymbol{x}) = \boldsymbol x^{\intercal}\boldsymbol{\beta}(\tau), \quad \tau \in (0,1)$$
 
 where $Q_{\tau}(Y \mid \boldsymbol x)$, is the conditional quantile

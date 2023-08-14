@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # QRSubsets
 
-QRsubsets implements the proposed methodology in the paper \textit{Bayesian Quantile Regression with Subset Selection: A Posterior Summarization  Perspective}. Specifically, it provides \textbf{Bayesian subset selection} for the linear quantile regression
+QRsubsets implements the proposed methodology in the paper *Bayesian Quantile Regression with Subset Selection: A Posterior Summarization  Perspective*. Specifically, it provides **Bayesian subset selection** for the linear quantile regression
 \[Q_{\tau}(Y \mid \boldsymbol{x}) = \boldsymbol x^{\intercal}\boldsymbol{\beta}(\tau), \quad \tau \in (0,1)\]
 
 where $Q_{\tau}(Y \mid \boldsymbol x)$, is the conditional quantile function for numeric random variable $Y$, $\boldsymbol x$ is a $p$-dimensional vector of covariates, and $\boldsymbol{\beta}(\tau)$ is a vector of quantile regression coefficients, potentially varying in $\tau$, which is the quantile of interest.
