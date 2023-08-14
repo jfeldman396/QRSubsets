@@ -16,7 +16,7 @@ accept_family_tau(post_Q_tau, XX, indicators, eps_level = 0.05, eta_level = 0)
 
 \item{eps_level}{slack variable \eqn{\epsilon}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.}
 
-\item{eta_level}{slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.}
+\item{eta_level}{slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Increase to discover more acceptable subsets.}
 }
 \value{
 A list containing \code{all_accept} which are the indices of the subsets from \code{indicators} which are acceptable,
@@ -31,5 +31,5 @@ chosen as the ``best" fit to the model-based conditional quantile function, whic
 For any subset \eqn{S} obtained by the quantile-specific branch and bound search,
 that subset is deemed acceptable if \eqn{P(D^{\tau}_{S, \hat{Q}}  \leq \eta) \geq \epsilon}, where \eqn{D^{\tau}_{S, \hat{Q}} = 100 \ \code{x} \ (L^{\tau}_{S}(\theta)  -L^{\tau}_{\hat{Q}}(\boldsymbol\theta) )/L^{\tau}_{\hat{Q}}(\theta) },
 \eqn{\hat Q} is the posterior mean of \eqn{\tau}th conditional quantile function, \eqn{L} is the aggregated \eqn{L^2} loss, and \eqn{\theta} are the Bayesian regression model parameters, drawn from the posterior. The smallest acceptable subset
-is then the smallest in cardanlity subset collected that maintains satisfactory predictive power under the criteria outlined above.
+is then the smallest in cardanlity subset collected that maintains satisfactory predictive power under the criteria outlined
 }

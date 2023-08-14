@@ -10,7 +10,7 @@
 #' @param XX \code{n x p} matrix of covariates at which to evaluate subsets
 #' @param indicators \code{L x p} matrix of inclusion indicators extracted from the branch and bound
 #' @param eps_level slack variable \eqn{\epsilon}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
-#' @param eta_level slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Decrease to discover more acceptable subsets.
+#' @param eta_level slack variable \eqn{\eta}, used to determine member subsets in the acceptable family. Increase to discover more acceptable subsets.
 #' @return A list containing \code{all_accept} which are the indices of the subsets from \code{indicators} which are acceptable,
 #' \code{ell_small}, which the index of the smallest acceptable subset, and \code{beta_hat_small} which is the optimal action (\eqn{\tau} quantile regression coefficients) for the smallest acceptable subset.
 #'
