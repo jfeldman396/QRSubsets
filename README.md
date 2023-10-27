@@ -292,7 +292,7 @@ included in more than 95% of acceptable families. We also see that the
 acceptable families correctly deem $X_{2}$ and $X_{10}$ as important,
 which are the non-zero homogeneous covariates.
 
-## Post estimates and uncertainty
+## Point estimation and uncertainty quantification
 
 We can also look specifically at the smallest acceptable subset in each
 acceptable family to extract point estiamtes via the optimal action and
