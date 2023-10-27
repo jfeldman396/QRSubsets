@@ -229,8 +229,8 @@ for(t in 1:length(tau)){
 
 Among the quantile-specific acceptable families, we can investigate
 marginal variable importance across the entire reponse distribution.
-This is done by identifyingcovariates for which the marginal importance
-is large (\> \$95%) for at least one quantile
+This is done by identifying covariates for which the marginal importance
+is large (\> 95%) for at least one quantile
 
 ``` r
 
